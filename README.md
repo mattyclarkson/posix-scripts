@@ -19,7 +19,7 @@ fi
 ```
 
 vimrc
-------
+-----
 
 Add the following to '~/.vimrc'
 
@@ -28,4 +28,14 @@ let HOME=expand('<sfile>:p:h')
 if filereadable($HOME . '/.posix_scripts/rc.vim')
   source $HOME/.posix_scripts/rc.vim
 endif
+```
+
+gitconfig
+---------
+
+Add the following to `~/.gitconfig`:
+
+```
+[include]
+	path=.posix_scripts/gitconfig
 ```
