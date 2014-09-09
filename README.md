@@ -14,6 +14,15 @@ Add the following to `~/.bashrc`:
 
 ```
 if [ -f ~/.posix_scripts/bashrc ]; then
+  # Grab the newest posix scripts at least once a week
+  if hash stat 2>&- && hash find 2>&- && hash git 2>&- && \
+      ! stat $(find ~/.posix_scripts/.git -name FETCH_HEAD -mtime -7) > /dev/null 2>&1; then
+    echo -n Updating POSIX scripts...
+    git --git-dir=${HOME}/.posix_scripts/.git --work-tree=${HOME}/.posix_scripts  pull -p > /dev/null
+    echo Done!
+  fi
+
+  # Source the Bash run commands
   . ~/.posix_scripts/bashrc
 fi
 ```
