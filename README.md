@@ -5,6 +5,7 @@ Clone into the home directory:
 
 ```
 git clone git@github.com:mattyclarkson/posix-scripts.git ~/.posix_scripts
+git --git-dir=${HOME}/.posix_scripts/.git --work-tree=${HOME}/.posix_scripts submodule update --init
 ```
 
 bashrc
@@ -19,6 +20,7 @@ if [ -f ~/.posix_scripts/bashrc ]; then
       ! stat $(find ~/.posix_scripts/.git -name FETCH_HEAD -mtime -7) > /dev/null 2>&1; then
     echo -n Updating POSIX scripts...
     git --git-dir=${HOME}/.posix_scripts/.git --work-tree=${HOME}/.posix_scripts  pull -p > /dev/null
+    git --git-dir=${HOME}/.posix_scripts/.git --work-tree=${HOME}/.posix_scripts submodule update --init
     echo Done!
   fi
 
