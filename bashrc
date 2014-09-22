@@ -18,6 +18,10 @@ alias path='echo $PATH | tr ":" "\n"'
 # Show ambiguous matches on first tab
 bind 'set show-all-if-ambiguous on'
 
+# Search history on up/down arrows
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+
 # This ignores file tab completion of hidden dirs/files
 bind 'set match-hidden-files off'
 
