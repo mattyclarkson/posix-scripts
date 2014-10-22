@@ -19,8 +19,10 @@ if [ -f ~/.posix_scripts/bashrc ]; then
   if hash stat 2>&- && hash find 2>&- && hash git 2>&- && \
       ! stat $(find ~/.posix_scripts/.git -name FETCH_HEAD -mtime -7) > /dev/null 2>&1; then
     echo -n Updating POSIX scripts...
-    git --git-dir=${HOME}/.posix_scripts/.git --work-tree=${HOME}/.posix_scripts  pull -p > /dev/null
-    git --git-dir=${HOME}/.posix_scripts/.git --work-tree=${HOME}/.posix_scripts submodule update --init
+    cd ${HOME}/.posix_scripts
+    git pull -p > /dev/null
+    git submodule update --init > /dev/null
+    cd -
     echo Done!
   fi
 
