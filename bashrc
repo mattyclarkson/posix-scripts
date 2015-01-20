@@ -1,6 +1,9 @@
 # Set the editor
 export EDITOR=vim
 
+# Add this folder to the path so that the scripts can be found
+export PATH=$PATH:~/.posix_scripts
+
 # Remove duplicate paths
 export PATH=`echo "${PATH}" | tr ":" "\n" | uniq | tr "\n" ":" | head -c -1`
 
