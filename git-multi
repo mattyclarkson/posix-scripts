@@ -37,7 +37,7 @@ do
   if [ -d "$gitdir" ]; then
     echo -e "\e[34m$worktree\e[0m"
     cd $worktree
-    git ${cmd[*]} || true
+    git ${cmd[*]} || echo -e "\e[31mFailure\e[0m"
     cd - > /dev/null
   fi
 done
