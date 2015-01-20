@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -eu
+set -o pipefail
+IFS=$'\n\t'
+
+if [ $# -lt 2 ]; then
+  echo "Usage: ./git [cmd] [repositories]..."
+  echo ""
+  echo "This script can be used to quickly perform a git command on multiple repositories"
+  echo ""
+  echo "Examples:"
+  echo "  ./git status -s vca-*"
+  exit 1
+fi
+
+# Split up the commands and folders
+cmd=("$1")
+shift
+for arg in "$@"
+do
+  if [ ! -d $arg ]; then
+    cmd[${#cmd[@]}]="$arg"
+  else
+    if [ -z "${folders:-}" ]; then
+      folders=("$arg")
+    else
+      folders[${#folders[@]}]="$arg"
+    fi
+  fi
+done
+
+# Perform the git command on each folder
+for ((i = 0; i < ${#folders[@]}; i++ ))
+do
+  worktree="${folders[$i]}"
+  gitdir="$worktree/.git"
+  if [ -d "$gitdir" ]; then
+    echo -e "\e[34m$worktree\e[0m"
+    git --git-dir="$gitdir" --work-tree="$worktree" ${cmd[*]} || true
+  fi
+done

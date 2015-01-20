@@ -1,0 +1,54 @@
+#!/bin/sh
+set -euo pipefail
+IFS=$'\n\t'
+
+if [ $# -eq 0 ]; then
+  echo No projects defined
+  echo Example:
+  echo "  $0 zone details"
+  exit 1
+fi
+
+if [ -z "${GITLAB_PRIVATE_API_TOKEN}" ]; then
+  echo Set GITLAB_PRIVATE_API_TOKEN
+  exit 1
+fi
+
+read -p "Milestone title: " title
+if [ "$title" == "" ]; then
+  echo Must provide a valid milestone title: $title
+  exit 1
+fi
+read -p "Description for $title: " description
+if [ "$description" == "" ]; then
+  echo Must provide a valid milestone description: $description
+  exit 1
+fi
+
+for project in "$@"; do
+  echo -e "\e[34mvca-$project\e[0m"
+  json=$(curl \
+    --silent \
+    --insecure \
+    --header "PRIVATE-TOKEN: ${GITLAB_PRIVATE_API_TOKEN}" \
+    https://dev.vcatechnology.com/gitlab/api/v3/projects/web%2Fvca-$project)
+  if [ "$json" == "{\"message\":\"404 Not Found\"}" ]; then
+    echo Failed to create vca-$project: $json
+    exit 1
+  fi
+  id=$(echo $json | sed 's|^{"id":\([0-9]\+\).*|\1|')
+  if [ ! $id -gt 0 ]; then
+    echo Failed to create vca-$project: $id
+    exit 1
+  fi
+  json=$(curl \
+    --silent \
+    --insecure \
+    --header "PRIVATE-TOKEN: ${GITLAB_PRIVATE_API_TOKEN}" \
+    --data "title=$title&description=$description" \
+    https://dev.vcatechnology.com/gitlab/api/v3/projects/$id/milestones)
+  if [ "$json" == "{\"message\":\"404 Not Found\"}" ]; then
+    echo Failed to create milestone: $json
+    exit 1
+  fi
+done

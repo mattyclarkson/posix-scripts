@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+set -eu
+set -o pipefail
+IFS=$'\n\t'
+
+if [ $# -lt 2 ]; then
+  echo "Usage: ./git-totals [author] [git repositories]..."
+  echo ""
+  echo "This script can list the total contributions by a user"
+  echo ""
+  echo "Examples:"
+  echo "  ./git-totals 'User Name' *"
+  exit 1
+fi
+
+username=${1}
+shift
+filename=${1}
+if [ ! -d "${filename}" ]; then
+  shift
+else
+  filename=
+fi
+
+# Perform the git command on each folder
+declare -a author=(0 0 0)
+declare -a total=(0 0 0)
+for dir in "$@"
+do
+  worktree="${dir}"
+  gitdir="$worktree/.git"
+  if [ -d "$gitdir" ]; then
+    totals=$(git --git-dir="${gitdir}" --work-tree="${worktree}" log --pretty=tformat: --numstat -- "${filename}" | \
+      gawk '{ add += $1; subs += $2 } END { printf "%s %s\n", add, subs}' -)
+    total[0]=$((${total[0]} + $(echo ${totals} | sed 's|\([0-9]\+\) \([0-9]\+\)|\1|g')))
+    total[1]=$((${total[1]} + $(echo ${totals} | sed 's|\([0-9]\+\) \([0-9]\+\)|\2|g')))
+    authors=$(git --git-dir="${gitdir}" --work-tree="${worktree}" log --author="${username}" --pretty=tformat: --numstat -- "${filename}" | \
+      gawk '{ add += $1; subs += $2 } END { printf "%s %s\n", add, subs }' -)
+    if [ "${authors}" != " " ]; then
+      author[0]=$((${author[0]} + $(echo ${authors} | sed 's|\([0-9]\+\) \([0-9]\+\)|\1|g')))
+      author[1]=$((${author[1]} + $(echo ${authors} | sed 's|\([0-9]\+\) \([0-9]\+\)|\2|g')))
+    fi
+  fi
+done
+echo -ne "\e[34m$username\e[0m: "
+echo -ne "\e[32madded:\e[0m ${author[0]}/${total[0]} ($(($((${author[0]}*100))/${total[0]}))%) "
+echo -ne "\e[33mremoved:\e[0m ${author[1]}/${total[1]} ($(($((${author[1]}*100))/${total[1]}))%) "
+echo -e "\e[35mtotals:\e[0m $((${author[0]} - ${author[1]}))/$((${total[0]} - ${total[1]})) ($(($(($((${author[0]} - ${author[1]}))*100))/$((${total[0]} - ${total[1]}))))%)"

@@ -1,0 +1,57 @@
+#!/bin/sh
+set -euo pipefail
+IFS=$'\n\t'
+
+if [ $# -eq 0 ]; then
+  echo No projects defined
+  echo Example:
+  echo "  $0 zone details"
+  exit 1
+fi
+
+if [ -z "${GITLAB_PRIVATE_API_TOKEN}" ]; then
+  echo Set GITLAB_PRIVATE_API_TOKEN
+  exit 1
+fi
+
+for project in "$@"; do
+  echo -e "\e[34mvca-$project\e[0m"
+  mkdir vca-$project
+  cd vca-$project
+  git init
+  echo 'import vcawaflib' > wscript
+  read -p "Description for vca-$project: " description
+  json=$(curl \
+    --silent \
+    --insecure \
+    --header "PRIVATE-TOKEN: ${GITLAB_PRIVATE_API_TOKEN}" \
+    --data "name=vca-$project&namespace_id=8&wiki_enabled=0&visibility_level=10&description=$description" \
+    https://dev.vcatechnology.com/gitlab/api/v3/projects)
+  if [ "$json" == "{\"message\":\"404 Not Found\"}" ]; then
+    echo Failed to create vca-$project: $json
+    exit 1
+  fi
+  id=$(echo $json | sed 's|^{"id":\([0-9]\+\).*|\1|')
+  if [ ! $id -gt 0 ]; then
+    echo Failed to create vca-$project: $id
+    exit 1
+  fi
+  waf template web component vca-$project "$description" &> /dev/null|| true
+  git remote add gitlab git@dev.vcatechnology.com:web/vca-$project.git
+  git add .
+  git commit -m "Boilerplate vca-$project"
+  sleep 1
+  git push -u gitlab master
+  sleep 1
+  json=$(curl -X PUT \
+    --silent \
+    --insecure \
+    --header "PRIVATE-TOKEN: ${GITLAB_PRIVATE_API_TOKEN}" \
+    --header "Content-Length: 0" \
+    https://dev.vcatechnology.com/gitlab/api/v3/projects/$id/repository/branches/master/protect)
+  if [ "$json" == "{\"message\":\"404 Not Found\"}" ]; then
+    echo Failed to protect master branch: $json
+    exit 1
+  fi
+  cd ..
+done

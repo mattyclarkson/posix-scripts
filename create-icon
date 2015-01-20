@@ -1,0 +1,49 @@
+#!/bin/sh
+set -euo pipefail
+IFS=$'\n\t'
+
+if [ $# -eq 0 ]; then
+  echo No icons defined
+  echo Example:
+  echo "  $0 weather-rain water-droplet-alert"
+  exit 1
+fi
+
+for icon in "$@"; do
+  project=icon-$icon
+  component=vca-$project
+  filename=svg/appbar.$(echo "$icon" | tr - .).svg
+  if [ ! -f  $filename ]; then
+    echo "The icon did not exist: ${filename}"
+    exit 1
+  fi
+  ./create-component $project
+  sed -i -e '/<vca-style/,$d' $component/$component.html
+  svg=$(sed -n -e "/<svg/,$$p" $filename |
+          tail -n +2 |
+          head -n -1 |
+          sed 's|^\t||' |
+          sed 's|fill="#[0-9a-zA-Z]\+" ||g' |
+          sed 's|fill-opacity="[0-9.]\+" ||g' |
+          sed 's|stroke-width="[0-9.]\+" ||g' |
+          sed 's|stroke-linejoin="[a-z]\+" ||g' |
+          sed 's|d="M |d="M|g' |
+          sed 's|\([0-9]\)C \([0-9]\)|\1C\2|g' |
+          sed 's|\([0-9]\)L \([0-9]\)|\1L\2|g' |
+          sed 's|\([0-9]\) Z \([0-9]\)|\1Z\2|g' |
+          sed 's|\([0-9]\) Z M \([0-9]\)|\1ZM\2|g' |
+          sed 's|\([0-9]\) Z "|\1Z"|g' |
+          sed 's|\([0-9]\),\([0-9]\)|\1 \2|g')
+  echo "<polymer-element name=\"${component}\" noscript>
+  <template>
+    <vca-style ref=\"icon\"></vca-style>
+    <svg width=\"100%\" height=\"100%\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"16 16 44 44\">﻿
+      ${svg}
+    </svg>
+  </template>
+</polymer-element>
+" >> $component/$component.html
+  sed -i -e 's/\(.\{100\}\) /\1\n        /g' $component/$component.html
+  ./git commit -am "Added Modern UI icon" $component
+  ./git push $component
+done
