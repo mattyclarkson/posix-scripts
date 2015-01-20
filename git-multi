@@ -36,6 +36,8 @@ do
   gitdir="$worktree/.git"
   if [ -d "$gitdir" ]; then
     echo -e "\e[34m$worktree\e[0m"
-    git --git-dir="$gitdir" --work-tree="$worktree" ${cmd[*]} || true
+    cd $worktree
+    git ${cmd[*]} || true
+    cd - > /dev/null
   fi
 done
