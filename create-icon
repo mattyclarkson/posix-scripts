@@ -17,7 +17,7 @@ for icon in "$@"; do
     echo "The icon did not exist: ${filename}"
     exit 1
   fi
-  ./create-component $project
+  create-component $project
   sed -i -e '/<vca-style/,$d' $component/$component.html
   svg=$(sed -n -e "/<svg/,$$p" $filename |
           tail -n +2 |
@@ -44,6 +44,6 @@ for icon in "$@"; do
 </polymer-element>
 " >> $component/$component.html
   sed -i -e 's/\(.\{100\}\) /\1\n        /g' $component/$component.html
-  ./git commit -am "Added Modern UI icon" $component
-  ./git push $component
+  git-multi commit -am "Added Modern UI icon" $component
+  git-multi push $component
 done
