@@ -5,14 +5,25 @@ IFS=$'\n\t'
 if [ $# -eq 0 ]; then
   echo No icons defined
   echo Example:
-  echo "  $0 weather-rain water-droplet-alert"
+  echo "  $0 weather-rain water-droplet-alert hazard=transit.hazard"
   exit 1
 fi
 
 for icon in "$@"; do
+  sep='='
+  case $icon in
+    (*"$sep"*)
+      svg=${icon#*"$sep"}
+      icon=${icon%%"$sep"*}
+      ;;
+    (*)
+      icon=$icon
+      svg=$(echo "$icon" | tr - .)
+      ;;
+  esac
   project=icon-$icon
   component=vca-$project
-  filename=svg/appbar.$(echo "$icon" | tr - .).svg
+  filename=svg/appbar.$svg.svg
   if [ ! -f  $filename ]; then
     echo "The icon did not exist: ${filename}"
     exit 1
