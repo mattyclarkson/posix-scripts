@@ -48,7 +48,7 @@ for icon in "$@"; do
   echo "<polymer-element name=\"${component}\" noscript>
   <template>
     <vca-style ref=\"icon\"></vca-style>
-    <svg width=\"100%\" height=\"100%\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"16 16 44 44\">﻿
+    <svg width=\"100%\" height=\"100%\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"16 16 44 44\">
       ${svg}
     </svg>
   </template>
