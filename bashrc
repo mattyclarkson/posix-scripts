@@ -2,10 +2,7 @@
 export EDITOR=vim
 
 # Add this folder to the path so that the scripts can be found
-export PATH=$PATH:~/.posix_scripts
-
-# Remove duplicate paths
-export PATH=`echo "${PATH}" | tr ":" "\n" | uniq | tr "\n" ":" | head -c -1`
+export PATH="${PATH}:~/.posix_scripts"
 
 # Remove duplicate history elements
 export HISTCONTROL=erasedups
@@ -16,7 +13,7 @@ CDPATH=.:~/svn:~/git
 # Some helpful aliases
 alias ..='cd ..'
 alias ...='cd ../..'
-alias path='echo $PATH | tr ":" "\n"'
+alias path='echo ${PATH} | tr ":" "\n"'
 
 # Show ambiguous matches on first tab
 bind 'set show-all-if-ambiguous on'
@@ -57,3 +54,14 @@ if [ -f ~/.posix_scripts/bash-git-prompt/gitprompt.sh ]; then
   GIT_PROMPT_END="\[\e[31m\]]\[\e[0m\] "
   . ~/.posix_scripts/bash-git-prompt/gitprompt.sh
 fi
+
+# Set up global node packages
+export NPM_GLOBAL_PACKAGES="${HOME}/.npm-global-packages"
+export NODE_PATH="${NPM_GLOBAL_PACKAGES}/lib/node_modules:${NODE_PATH}"
+export PATH="${NPM_GLOBAL_PACKAGES}/bin:${PATH}"
+unset MANPATH
+export MANPATH="${NPM_GLOBAL_PACKAGES}/share/man:$(manpath)"
+
+# Remove duplicate paths
+export PATH=`echo "${PATH}" | tr ":" "\n" | uniq | tr "\n" ":" | head -c -1`
+export NODE_PATH=`echo "${NODE_PATH}" | tr ":" "\n" | uniq | tr "\n" ":" | head -c -1`

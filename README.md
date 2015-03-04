@@ -52,3 +52,12 @@ Add the following to `~/.gitconfig`:
 [include]
 	path=.posix-scripts/gitconfig
 ```
+
+npmrc
+-----
+
+Add the following to `~/.npmrc`:
+
+```
+prefix=${HOME}/.npm-global-packages
+```
