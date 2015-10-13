@@ -1,11 +1,12 @@
 posix-scripts
 =============
 
-Clone into the home directory:
+Install with the following:
 
 ```
 git clone git@github.com:mattyclarkson/posix-scripts.git ~/.posix-scripts
-git --git-dir=${HOME}/.posix-scripts/.git --work-tree=${HOME}/.posix-scripts submodule update --init
+cd ~/.posix-scripts
+git submodule update --init
 ```
 
 bashrc
