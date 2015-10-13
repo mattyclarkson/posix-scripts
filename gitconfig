@@ -8,4 +8,3 @@
 	full-pull = pull --all -p
 	amend = commit -a --amend --no-edit
 	graph = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-	rebase-onto = "!f() { current=$(git rev-parse --abbrev-ref HEAD); target=$1; shift; git rebase $(git merge-base ${current} ${target}) --onto $target $@; }; f"
