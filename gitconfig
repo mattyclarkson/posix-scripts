@@ -9,9 +9,9 @@
 	amend = commit -a --amend --no-edit
 	graph = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	clean-branches = !git branch --merged master | grep -v \"\\* \" | grep -v \"master\" | xargs -rn 1 git branch -dc
-	edit = !gedit $(git status --porcelain | awk '{print $2}' )
-	edit-added = !gedit $(git status --porcelain | awk '$1 ~ /^A/ {print $2}' )
-	edit-modified = !GIT_EDIT_EDITOR=${GIT_EDIT_EDITOR-gedit} ${GIT_EDIT_EDITOR} $(git status --porcelain | awk '$1 ~ /^M/ {print $2}' )
-	edit-unmerged = !GIT_EDIT_EDITOR=${GIT_EDIT_EDITOR-gedit} ${GIT_EDIT_EDITOR}  $(git status --porcelain | awk '$1 ~ /^U/ {print $2}' )
-	edit-changed = !GIT_EDIT_EDITOR=${GIT_EDIT_EDITOR-gedit} ${GIT_EDIT_EDITOR}  $(git status --porcelain | awk '$1 ~ /^M|A|U/ {print $2}' )
-	edit-untracked = !GIT_EDIT_EDITOR=${GIT_EDIT_EDITOR-gedit} ${GIT_EDIT_EDITOR}  $(git status --porcelain | awk '$1 ~ /^??/ {print $2}' )
+	edit = !${GIT_EDIT_EDITOR-gedit} $(git status --porcelain | awk '{print $2}' )
+	edit-added = !${GIT_EDIT_EDITOR-gedit} $(git status --porcelain | awk '$1 ~ /^A/ {print $2}' )
+	edit-modified = !${GIT_EDIT_EDITOR-gedit} $(git status --porcelain | awk '$1 ~ /^M/ {print $2}' )
+	edit-unmerged = !${GIT_EDIT_EDITOR-gedit}  $(git status --porcelain | awk '$1 ~ /^U/ {print $2}' )
+	edit-changed = !${GIT_EDIT_EDITOR-gedit}  $(git status --porcelain | awk '$1 ~ /^M|A|U/ {print $2}' )
+	edit-untracked = !${GIT_EDIT_EDITOR-gedit}  $(git status --porcelain | awk '$1 ~ /^??/ {print $2}' )
