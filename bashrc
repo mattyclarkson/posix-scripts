@@ -50,6 +50,8 @@ if [ -f ~/.posix_scripts/bash-git-prompt/gitprompt.sh ]; then
   GIT_PROMPT_SYMBOLS_AHEAD="↑·"
   GIT_PROMPT_SYMBOLS_BEHIND="↓·"
   GIT_PROMPT_SYMBOLS_PREHASH=":"
+  GIT_PROMPT_PREFIX=""
+  GIT_PROMPT_SUFFIX=""
   GIT_PROMPT_START="\[\e[31m\][\[\e[33m\]\W\[\e[0m\]|"
   GIT_PROMPT_END="\[\e[31m\]]\[\e[0m\] "
   . ~/.posix_scripts/bash-git-prompt/gitprompt.sh

@@ -22,7 +22,7 @@ if [ -f ~/.posix-scripts/bashrc ]; then
     echo -n Updating POSIX scripts...
     cd ${HOME}/.posix-scripts
     git pull -p > /dev/null
-    git submodule update --init > /dev/null
+    git submodule update --remote --rebase > /dev/null
     cd -
     echo Done!
   fi
