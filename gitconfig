@@ -18,5 +18,6 @@
 	c = checkout
 	r = rebase
 	s = status
+	cp = cherry-pick
 	fp = !git full-pull
 	cb = !git clean-branches
