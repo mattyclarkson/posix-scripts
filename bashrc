@@ -14,6 +14,7 @@ CDPATH=.:~/svn:~/git:~/git/gitlab
 alias ..='cd ..'
 alias ...='cd ../..'
 alias path='echo ${PATH} | tr ":" "\n"'
+alias gb=gnome-builder
 
 # Show ambiguous matches on first tab
 bind 'set show-all-if-ambiguous on'
