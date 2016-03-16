@@ -8,7 +8,7 @@ export PATH="${PATH}:~/.posix_scripts"
 export HISTCONTROL=erasedups
 
 # Helpfully change directory to good directories
-CDPATH=.:~/svn:~/git
+CDPATH=.:~/svn:~/git:~/git/gitlab
 
 # Some helpful aliases
 alias ..='cd ..'
