@@ -16,6 +16,9 @@ alias ...='cd ../..'
 alias path='echo ${PATH} | tr ":" "\n"'
 alias gb=gnome-builder
 
+# Use gnome-builder as `git edit` editor
+export GIT_EDIT_EDITOR=gnome-builder
+
 # Show ambiguous matches on first tab
 bind 'set show-all-if-ambiguous on'
 
